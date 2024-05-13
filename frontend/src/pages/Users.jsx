@@ -20,25 +20,17 @@ const Users = () => {
 
   const onDelete = async (id) => {
     try {
-      await axios({
-        method: "DELETE",
-        url: "http://localhost/Php-React-Login/backend/fetching.php",
-        data: { id: id }, // Pass ID in the request body
-      });
-      fetchUsers(); // After successful delete, fetch users again to update the list
-    } catch (error) {
-      console.error("Error while deleting user:", error);
-    }
-  };
-
-  const onEdit = (id) => {
-    try {
-      axios.put(
-        `http://localhost/Php-React-Login/backend/fetching.php?id=${id}`
+      const { data } = await axios.delete(
+        "http://localhost/Php-React-Login/backend/delete-user.php",
+        {
+          data: { id: id },
+        }
       );
+
+      console.log(data);
       fetchUsers();
     } catch (error) {
-      console.error(error);
+      console.error("Error while deleting user:", error);
     }
   };
 
@@ -82,14 +74,7 @@ const Users = () => {
                     className="text-red-700"
                     onClick={() => onDelete(user.id)}
                   >
-                    Del
-                  </button>
-                  <button
-                    type="button"
-                    className="text-blue-700"
-                    onClick={() => onEdit(user.id)}
-                  >
-                    Edit
+                    Delete
                   </button>
                 </td>
               </tr>

@@ -76,6 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'DELETE':
+            $data = json_decode(file_get_contents("php://input"), true);
+
             if (isset($data['id'])) {
                 $id = $data['id'];
 
