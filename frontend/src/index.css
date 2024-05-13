@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .input-style {
+    @apply rounded-md p-2 outline-none border-indigo-700 border-2 text-black;
+  }
+
+  .button-style {
+    @apply bg-indigo-900 rounded-md w-20 h-10 text-white;
+  }
+}
