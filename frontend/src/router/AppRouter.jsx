@@ -1,5 +1,4 @@
 import React from "react";
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import About from "../pages/About";
@@ -14,15 +13,18 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* AuthRouter içindeki rotalar */}
         <Route element={<AuthRouter />}>
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" index element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Route>
+
+        {/* PrivateRouter içindeki rotalar */}
         <Route element={<PrivateRouter />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/users" element={<Users />} />
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="users" element={<Users />} />
         </Route>
       </Routes>
     </BrowserRouter>

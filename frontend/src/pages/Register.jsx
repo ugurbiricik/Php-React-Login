@@ -3,6 +3,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setIsRegistered } from "../redux/reducers/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const initialState = {
@@ -23,12 +24,13 @@ const Register = () => {
     e.preventDefault();
     try {
       await axios.post(
-        "http://localhost/Php-React-Login/backend/register.php",
+        "http://localhost/Php-React-Login/backend/fetching.php",
         formData
       );
       setFormData(initialState);
       dispatch(setIsRegistered(true));
       navigate("/login");
+      toast.success("Register successfull");
     } catch (error) {
       console.error(error);
     }

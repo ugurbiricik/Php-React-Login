@@ -18,6 +18,30 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  const onDelete = async (id) => {
+    try {
+      await axios({
+        method: "DELETE",
+        url: "http://localhost/Php-React-Login/backend/fetching.php",
+        data: { id: id }, // Pass ID in the request body
+      });
+      fetchUsers(); // After successful delete, fetch users again to update the list
+    } catch (error) {
+      console.error("Error while deleting user:", error);
+    }
+  };
+
+  const onEdit = (id) => {
+    try {
+      axios.put(
+        `http://localhost/Php-React-Login/backend/fetching.php?id=${id}`
+      );
+      fetchUsers();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center  text-5xl fixed inset-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -53,10 +77,18 @@ const Users = () => {
                   </div>
                 </td>
                 <td className="px-6 py-4 text-sm  font-medium text-right whitespace-nowrap flex gap-3">
-                  <button type="button" className="text-red-700">
+                  <button
+                    type="button"
+                    className="text-red-700"
+                    onClick={() => onDelete(user.id)}
+                  >
                     Del
                   </button>
-                  <button type="button" className="text-blue-700">
+                  <button
+                    type="button"
+                    className="text-blue-700"
+                    onClick={() => onEdit(user.id)}
+                  >
                     Edit
                   </button>
                 </td>

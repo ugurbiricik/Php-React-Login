@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setIsRegistered } from "../redux/reducers/authSlice";
+import { setIsLoggedIn } from "../redux/reducers/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { compare } from "bcryptjs";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const initialState = {
@@ -10,9 +12,26 @@ const Login = () => {
     password: "",
   };
 
+  const [userFromDb, setUserFromDb] = useState(null);
+  const fetchUser = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost/Php-React-Login/backend/fetching.php"
+      );
+
+      setUserFromDb(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   const [formData, setFormData] = useState(initialState);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,12 +40,30 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "http://localhost/Php-React-Login/backend/login.php",
-        formData
-      );
-      setFormData(initialState);
-      navigate("/");
+      if (userFromDb) {
+        const matchedUser = userFromDb.find(
+          (user) => user.email === formData.email
+        );
+
+        if (matchedUser) {
+          const isMatch = await compare(
+            formData.password,
+            matchedUser.password
+          );
+          if (isMatch) {
+            toast.success("Login successfull");
+            setFormData(initialState);
+            navigate("/");
+            dispatch(setIsLoggedIn(true));
+          } else {
+            toast.error("Invalid credentials");
+          }
+        } else {
+          toast.error("User not found");
+        }
+      } else {
+        toast.error("User not found");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -35,7 +72,7 @@ const Login = () => {
   return (
     <div className="flex flex-col justify-center items-center pt-10 bg-slate-100 w-full h-screen">
       <h1 className="text-3xl bg-orange-700 p-3 rounded-md text-white">
-        Kayit yaptiginiz kullanici bilgileriyle sisteme giris yapabilirsiniz.
+        Kayıt yaptığınız kullanıcı bilgileriyle sisteme giriş yapabilirsiniz.
       </h1>
       <div className="w-1/4">
         <form
@@ -50,7 +87,7 @@ const Login = () => {
             value={formData.email}
             name="email"
             type="email"
-            placeholder="email"
+            placeholder="Email"
             className="input-style"
             onChange={handleChange}
           />
@@ -58,7 +95,7 @@ const Login = () => {
             value={formData.password}
             type="password"
             name="password"
-            placeholder="password"
+            placeholder="Şifre"
             className="input-style"
             onChange={handleChange}
           />

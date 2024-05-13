@@ -7,6 +7,7 @@ const authSlice = createSlice({
     email: "",
     password: "",
     isRegistered: false,
+    isLoggedIn: false,
   },
   reducers: {
     login: (state, action) => {
@@ -36,10 +37,19 @@ const authSlice = createSlice({
     setIsRegistered: (state, action) => {
       state.isRegistered = action.payload;
     },
+    setIsLoggedIn: (state, action) => {
+      state.isLoggedIn = action.payload;
+    },
   },
 });
 
-export const { login, logout, update, register, setIsRegistered } =
-  authSlice.actions;
+export const {
+  login,
+  logout,
+  update,
+  register,
+  setIsRegistered,
+  setIsLoggedIn,
+} = authSlice.actions;
 
 export default authSlice.reducer;
